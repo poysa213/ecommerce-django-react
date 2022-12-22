@@ -17,8 +17,7 @@ class Promotion(models.Model):
     def __str__(self) -> str:
         return self.title
 
-    class Meta:
-        ordering = ['discount']
+    
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
@@ -29,8 +28,7 @@ class Category(models.Model):
     def __str__(self) -> str:
         return self.title
 
-    class Meta:
-        ordering = ['title']
+    
 
 # class Inventory(models.Model):
 #     quantity = models.IntegerField(default=1)
@@ -57,7 +55,6 @@ class Product(models.Model):
     def __str__(self) -> str:
         return self.title
 
-    class Meta:
-        ordering = ['title']
+   
 
    
