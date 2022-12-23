@@ -9,6 +9,8 @@ djangorestframework = "*"
 djangorestframework-simplejwt = {extras = ["crypto"], version = "*"}
 django-debug-toolbar = "*"
 django-filter = "*"
+uuid = "*"
+drf-nested-routers = "*"
 
 [dev-packages]
 
