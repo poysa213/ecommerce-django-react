@@ -1,5 +1,6 @@
-from rest_framework import serializers
 
+from django.core.validators import MinValueValidator
+from rest_framework import serializers
 from .models import Cart, CartItem
 
 from products.models import Product
@@ -10,7 +11,9 @@ class CartItemProductSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'unit_price']
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product = CartItemProductSerializer()
+    product = CartItemProductSerializer(
+        validators=[MinValueValidator(1)]
+    )
     total_price = serializers.SerializerMethodField()
 
     def get_total_price(self, cart_item:CartItem):
@@ -36,6 +39,10 @@ class CartSerializer(serializers.ModelSerializer):
 class AddCartItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField()
 
+    def validate_product_id(self, product_id):
+        if not Product.objects.filter(pk=product_id).exists():
+            raise serializers.ValidationError('No product with the given ID was found')
+        return product_id
     def save(self, **kwargs):
         product_id = self.validated_data['product_id']
         quantity = self.validated_data['quantity']
@@ -45,10 +52,25 @@ class AddCartItemSerializer(serializers.ModelSerializer):
             cart_item = CartItem.objects.get(cart_id=cart_id, product_id=product_id)
             cart_item.quantity += quantity
             cart_item.save()
+            self.instance = cart_item
         except CartItem.DoesNotExist:
-            CartItem.objects.create(cart_id=cart_id, **self.validated_data)
-
+            self.instance = CartItem.objects.create(cart_id=cart_id, **self.validated_data)
+            
+        return self.instance
 
     class Meta:
         model = CartItem
         fields = ['id', 'product_id', 'quantity']
+
+
+class UpdateCartItemSerializer(serializers.ModelSerializer):
+  
+
+    # def validate_product_id(self, product_id):
+    #     if not Product.objects.filter(pk=product_id).exists():
+    #         raise serializers.ValidationError('No product with the given ID was found')
+    #     return product_id
+
+    class Meta:
+        model = CartItem
+        fields = ['quantity']
