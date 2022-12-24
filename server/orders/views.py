@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin
 
 from .models import Cart,CartItem
-from .serializers import CartSerializer, CartItemSerializer
+from .serializers import CartSerializer, CartItemSerializer, AddCartItemSerializer
 
 class CartViewSet(CreateModelMixin,
                   RetrieveModelMixin,
@@ -16,10 +16,19 @@ class CartViewSet(CreateModelMixin,
 
 
 class CartItemViewSet(ModelViewSet):
-    serializer_class = CartItemSerializer
+  
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return AddCartItemSerializer
+        return CartItemSerializer
+
+    def get_serializer_context(self):
+        return {'cart_id': self.kwargs['cart_pk']}
     
     def get_queryset(self):
         return CartItem.objects.filter( \
             cart_id=self.kwargs['cart_pk']) \
                 .select_related('product')
+
+    
     
