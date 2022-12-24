@@ -2,13 +2,15 @@ from rest_framework import serializers
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+from .models import Customer
+
 
 
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'phone_number', 'email')
+        fields = ('id', 'phone_number', 'email', 'first_name', 'last_name')
 
 
 # Register Serializer
@@ -25,3 +27,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(password_data)
         user.save()
         return user
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Customer
+        fields = ['id', 'birth_date', 'user']

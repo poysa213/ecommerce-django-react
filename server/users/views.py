@@ -4,10 +4,12 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin
 
-from .serializers import  RegisterSerializer, UserSerializer
 
-
+from .serializers import  RegisterSerializer, UserSerializer, CustomerSerializer
+from .models import Customer
 
 
 class RegisterView(generics.GenericAPIView):
@@ -24,3 +26,7 @@ class RegisterView(generics.GenericAPIView):
                 "message": "User Created Successfully.  Now perform Login to get your token",
             })
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomerViewSet(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, GenericViewSet):
+    queryset = Customer.objects.all() 
+    serializer_class = CustomerSerializer
