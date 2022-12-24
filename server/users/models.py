@@ -52,10 +52,10 @@ class User(AbstractUser):
         return self.email
 
 
-class Address(models.Model):
-    wilaya = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    strete = models.CharField(max_length=255)
+# class Address(models.Model):
+#     wilaya = models.CharField(max_length=255)
+#     city = models.CharField(max_length=255)
+#     strete = models.CharField(max_length=255)
 
 
 class Customer(models.Model):
@@ -63,7 +63,7 @@ class Customer(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True, blank=True)
-    address = models.ForeignKey(Address, on_delete=models.PROTECT)
+    # address = models.ForeignKey(Address, on_delete=models.PROTECT)
 
   
 

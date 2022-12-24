@@ -30,7 +30,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user_id = serializers.IntegerField(read_only=True)
     class Meta:
         model = Customer
-        fields = ['id', 'birth_date', 'user']
+        fields = ['id', 'birth_date', 'user_id']
