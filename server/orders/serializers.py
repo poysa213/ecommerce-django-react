@@ -88,6 +88,7 @@ class OrderItemSerialzer(serializers.ModelSerializer):
 
 class OrderSerialzer(serializers.ModelSerializer):
     items = OrderItemSerialzer(many=True)
+
     class Meta:
         model = Order
         fields = ['id', 'customer', 'placed_at', 'payment_status', 'items']
@@ -99,33 +100,69 @@ class UpdateOrderSerialzer(serializers.ModelSerializer):
         
 
 class CreateOrderSerializer(serializers.ModelSerializer):
-    cart_id = serializers.UUIDField()
+    # cart_id = serializers.UUIDField()
   
-    def validat_cart_id(self, cart_id):
+    # def validat_cart_id(self, cart_id):
+    #     if not Cart.objects.filter(pk=cart_id).exists():
+    #         raise serializers.ValidationError('No cart ')
+    #     if CartItem.objects.filter(cart_id=cart_id).count() == 0:
+    #         raise serializers.ValidationError('The cart is empty')
+    #     return cart_id
+
+    # def save(self):
+    #     with transaction.atomic():
+    #         cart_id = self.validated_data['cart_id']
+    #         customer = Customer.objects.get(user_id=self.context['user_id'])
+    #         order = Order.objects.create(customer=customer)
+
+    #         cart_items = CartItem.objects. \
+    #             select_related('product') \
+    #             .filter(cart_id=cart_id)
+    #         order_items = [
+    #             OrderItem(
+    #                 order=order, 
+    #                 product=item.product,
+    #                 unit_price=item.product.unit_price,
+    #                 quantity=item.quantity
+    #             ) for item in cart_items
+    #             ]
+    #         OrderItem.objects.bulk_create(order_items)
+
+    #         Cart.objects.filter(pk=cart_id).delete()
+    #         return Order
+    cart_id = serializers.UUIDField()
+
+    def validate_cart_id(self, cart_id):
         if not Cart.objects.filter(pk=cart_id).exists():
-            raise serializers.ValidationError('No cart ')
+            raise serializers.ValidationError(
+                'No cart with the given ID was found.')
         if CartItem.objects.filter(cart_id=cart_id).count() == 0:
-            raise serializers.ValidationError('The cart is empty')
+            raise serializers.ValidationError('The cart is empty.')
         return cart_id
 
-    def save(self):
+    def save(self, **kwargs):
         with transaction.atomic():
             cart_id = self.validated_data['cart_id']
-            (customer, created) = Customer.objects.get(user_id=self.context['user_id'])
+
+            customer = Customer.objects.get(
+                user_id=self.context['user_id'])
             order = Order.objects.create(customer=customer)
 
-            cart_items = CartItem.objects. \
-                select_related('product') \
+            cart_items = CartItem.objects \
+                .select_related('product') \
                 .filter(cart_id=cart_id)
             order_items = [
                 OrderItem(
-                    order=order, 
+                    order=order,
                     product=item.product,
-                    unite_price=item.product.unite_price,
+                    unit_price=item.product.unit_price,
                     quantity=item.quantity
                 ) for item in cart_items
-                ]
+            ]
             OrderItem.objects.bulk_create(order_items)
 
             Cart.objects.filter(pk=cart_id).delete()
-            return Order
+
+    
+
+            return order

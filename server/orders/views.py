@@ -43,10 +43,10 @@ class OrderViewSet(ModelViewSet):
         return [IsAuthenticated()]
     
     def create(self, request,*args, **kwargs):
-        serializer = CreateOrderSerializer(data=request.data, context={'user_id': self.request.user.id})
+        serializer = CreateOrderSerializer(data=request.data, context={'user_id': self.request.user.id}, many=True)
         serializer.is_valide(raise_exception=True)
         order = serializer.save()
-        serializer = OrderSerialzer(order)
+        serializer = OrderSerialzer(order, many=True)
         return Response(serializer.data)
 
     def get_serializer_class(self):
@@ -58,8 +58,8 @@ class OrderViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Order.objects.All()
-        (customer_id, created) = Customer.objects.only('id').get(user_id=self.request.user.id)
+            return Order.objects.all()
+        customer_id = Customer.objects.only('id').get(user_id=self.request.user.id)
         return Order.objects.filter(customer_id=customer_id)
 
 
