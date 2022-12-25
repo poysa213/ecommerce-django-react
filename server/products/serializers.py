@@ -18,6 +18,11 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'slug', 'inventory',
                   'unit_price', 'category', 'promotions']
 
+class SimpleProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'unit_price']
+
     # price_after_promotions = serializers.SerializerMethodField(
     #     method_name='calculate_promotions')
 
