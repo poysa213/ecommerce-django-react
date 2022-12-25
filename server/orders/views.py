@@ -37,22 +37,24 @@ class CartItemViewSet(ModelViewSet):
 
 class OrderViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+
     def get_permissins(self):
         if self.request.method in ['PATCH', 'DELETE']:
             return [IsAdminUser()]
         return [IsAuthenticated()]
     
     def create(self, request,*args, **kwargs):
-        serializer = CreateOrderSerializer(data=request.data, context={'user_id': self.request.user.id}, many=True)
-        serializer.is_valide(raise_exception=True)
+        serializer = CreateOrderSerializer(data=request.data, context={'user_id': self.request.user.id})
+        serializer.is_valid(raise_exception=True)
+        print('ffffffffffffffff')
         order = serializer.save()
-        serializer = OrderSerialzer(order, many=True)
+        serializer = OrderSerialzer(order)
         return Response(serializer.data)
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateOrderSerializer
-        elif self.request.method == 'PTCH':
+        elif self.request.method == 'PATCH':
             return UpdateOrderSerialzer
         return OrderSerialzer
 

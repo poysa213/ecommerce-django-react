@@ -84,7 +84,7 @@ class OrderItemSerialzer(serializers.ModelSerializer):
     product = SimpleProductSerializer()
     class Meta:
         model = OrderItem
-        fields = ['id', 'product', 'unite_price', 'quantity']
+        fields = ['id', 'product', 'unit_price', 'quantity']
 
 class OrderSerialzer(serializers.ModelSerializer):
     items = OrderItemSerialzer(many=True)
@@ -99,7 +99,7 @@ class UpdateOrderSerialzer(serializers.ModelSerializer):
         fields = ['payment_status']
         
 
-class CreateOrderSerializer(serializers.ModelSerializer):
+class CreateOrderSerializer(serializers.Serializer):
     # cart_id = serializers.UUIDField()
   
     # def validat_cart_id(self, cart_id):
