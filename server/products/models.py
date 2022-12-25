@@ -9,10 +9,12 @@ class Promotion(models.Model):
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255, blank=True)
     active = models.BooleanField(default=True)
-    discount = models.FloatField(validators=[MinValueValidator(0)])
+    discount = models.DecimalField(max_digits=6,
+        decimal_places=2,
+        validators=[MinValueValidator(1)])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
+
 
     def __str__(self) -> str:
         return self.title

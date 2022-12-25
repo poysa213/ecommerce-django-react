@@ -3,7 +3,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register('products', views.ProductViewSet, basename='products')
-router.register('category', views.CategoryViewSet)
-router.register('promotion', views.PromotionViewSet)
+router.register('categories', views.CategoryViewSet)
+router.register('promotions', views.PromotionViewSet)
 
 urlpatterns = router.urls
