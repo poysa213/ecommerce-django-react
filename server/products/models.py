@@ -32,11 +32,7 @@ class Category(models.Model):
 
     
 
-# class Inventory(models.Model):
-#     quantity = models.IntegerField(default=1)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-#     deleted_at = models.DateTimeField(null=True, blank=True)
+
    
 
 class Product(models.Model):
@@ -56,6 +52,10 @@ class Product(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+class Image(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
 
    
 
