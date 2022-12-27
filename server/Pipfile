@@ -11,6 +11,10 @@ django-debug-toolbar = "*"
 django-filter = "*"
 uuid = "*"
 drf-nested-routers = "*"
+django-cloudinary-storage = "*"
+django-environ = "*"
+pillow = "*"
+cloudinary = "*"
 
 [dev-packages]
 

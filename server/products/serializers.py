@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from .models import Product, Promotion, Category
+from .models import Product, Promotion, Category, ProductImage
 
 class PromotionSerializer(serializers.ModelSerializer):
     products_count = serializers.IntegerField(read_only=True)
@@ -15,9 +15,6 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'title', 'products_count']
-
-   
-
 
 class ProductSerializer(serializers.ModelSerializer):
     price_after_promotions = serializers.SerializerMethodField(
@@ -36,6 +33,12 @@ class SimpleProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'title', 'unit_price']
+
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
 
   
 

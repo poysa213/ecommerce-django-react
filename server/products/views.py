@@ -7,8 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 
 
 from .permissions import IsAdminOrReadOnly
-from .serializers import ProductSerializer, CategorySerializer, PromotionSerializer
-from .models import Product, Category, Promotion
+from .serializers import ProductSerializer, CategorySerializer, PromotionSerializer, ProductImageSerializer
+from .models import Product, Category, Promotion, ProductImage
 from .filters import ProductFilter
 from .pagination import DefaultPagination
 
@@ -35,6 +35,14 @@ class PromotionViewSet(ModelViewSet):
     queryset = Promotion.objects.annotate(products_count=Count('products')).all()
     serializer_class = PromotionSerializer
     permission_classes = [IsAdminOrReadOnly]
+
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+    def  get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
+    
   
 
     
