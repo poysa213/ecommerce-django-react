@@ -16,13 +16,24 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'title', 'products_count']
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
+
+    def create(self, validated_data):
+        product_id = self.context['product_id']
+        return ProductImage.objects.create(product_id=product_id, **validated_data)
+
+  
 class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
     price_after_promotions = serializers.SerializerMethodField(
     read_only=True)
     class Meta:
         model = Product
         fields = ['id', 'title', 'description', 'slug', 'inventory',
-                  'unit_price', 'category', 'promotions', 'price_after_promotions']
+                  'unit_price', 'category', 'promotions', 'price_after_promotions', 'images']
    
 
     def get_price_after_promotions(self, product: Product):
@@ -35,10 +46,5 @@ class SimpleProductSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'unit_price']
 
 
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = ['id', 'image']
 
-  
 

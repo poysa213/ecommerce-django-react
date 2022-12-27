@@ -43,6 +43,10 @@ class Product(models.Model):
         max_digits=6,
         decimal_places=2,
         validators=[MinValueValidator(1)])
+    old_price = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        validators=[MinValueValidator(1)])
     inventory = models.IntegerField(validators=[MinValueValidator(0)], null=True, default=1)
     updated_at = models.DateTimeField(auto_now=True)
     last_update = models.DateTimeField(auto_now=True)
@@ -55,7 +59,7 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField()
+    image = models.ImageField(upload_to='products/images')
     added_at = models.DateTimeField(auto_now_add=True)
 
    

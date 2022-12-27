@@ -13,7 +13,7 @@ from .filters import ProductFilter
 from .pagination import DefaultPagination
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.prefetch_related('images').all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
@@ -39,6 +39,10 @@ class PromotionViewSet(ModelViewSet):
 class ProductImageViewSet(ModelViewSet):
     serializer_class = ProductImageSerializer
     permission_classes = [IsAdminOrReadOnly]
+    
+    def get_serializer_context(self):
+        return {'product_id': self.kwargs['product_pk']}
+
 
     def  get_queryset(self):
         return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
